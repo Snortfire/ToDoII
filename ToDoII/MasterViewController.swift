@@ -20,8 +20,12 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         // Do any additional setup after loading the view, typically from a nib.
         navigationItem.leftBarButtonItem = editButtonItem
 
+        // Create a variable to hold this button command to add item
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(insertNewObject(_:)))
+
         navigationItem.rightBarButtonItem = addButton
+
+
         if let split = splitViewController {
             let controllers = split.viewControllers
             detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
@@ -98,7 +102,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         if editingStyle == .delete {
             let context = fetchedResultsController.managedObjectContext
             context.delete(fetchedResultsController.object(at: indexPath))
-                
+
             do {
                 try context.save()
             } catch {
@@ -120,23 +124,23 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         if _fetchedResultsController != nil {
             return _fetchedResultsController!
         }
-        
+
         let fetchRequest: NSFetchRequest<Event> = Event.fetchRequest()
-        
+
         // Set the batch size to a suitable number.
         fetchRequest.fetchBatchSize = 20
-        
+
         // Edit the sort key as appropriate.
         let sortDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)
-        
+
         fetchRequest.sortDescriptors = [sortDescriptor]
-        
+
         // Edit the section name key path and cache name if appropriate.
         // nil for section name key path means "no sections".
         let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: "Master")
         aFetchedResultsController.delegate = self
         _fetchedResultsController = aFetchedResultsController
-        
+
         do {
             try _fetchedResultsController!.performFetch()
         } catch {
